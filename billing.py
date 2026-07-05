@@ -21,6 +21,9 @@ class CheckoutRequest(BaseModel):
 
 @router.post("/api/checkout")
 def create_checkout(body: CheckoutRequest, session: Session = Depends(get_session)) -> dict:
+    if not settings.stripe_secret_key or not settings.stripe_price_id:
+        raise HTTPException(status_code=503, detail="Payments are not configured yet.")
+
     get_or_create_device(session, body.device_id)
 
     checkout_session = stripe.checkout.Session.create(
@@ -57,6 +60,8 @@ def cancel_page() -> str:
 
 @router.post("/api/stripe/webhook")
 async def stripe_webhook(request: Request, session: Session = Depends(get_session)) -> dict:
+    if not settings.stripe_webhook_secret:
+        raise HTTPException(status_code=503, detail="Payments are not configured yet.")
     payload = await request.body()
     sig_header = request.headers.get("stripe-signature", "")
     try:

@@ -7,9 +7,12 @@ class Settings(BaseSettings):
     mistral_api_key: str
     mistral_model: str = "mistral-medium-latest"
 
-    stripe_secret_key: str
-    stripe_webhook_secret: str
-    stripe_price_id: str
+    # Optional so the backend can boot (and the LLM relay + quota gate work)
+    # before Stripe is set up. Payment endpoints return 503 until these are
+    # set — see billing.py.
+    stripe_secret_key: str | None = None
+    stripe_webhook_secret: str | None = None
+    stripe_price_id: str | None = None
 
     database_url: str
 
