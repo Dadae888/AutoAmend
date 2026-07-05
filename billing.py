@@ -5,10 +5,10 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from ..config import settings
-from ..db import get_session
-from ..models import Device
-from .status import get_or_create_device
+from config import settings
+from db import get_session
+from models import Device
+from status import get_or_create_device
 
 router = APIRouter()
 

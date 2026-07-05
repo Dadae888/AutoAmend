@@ -70,12 +70,21 @@ backend is a generic, dumb relay + gatekeeper.
 
 ## 2. Deploy to Render
 
+The code is a flat set of modules (`main.py`, `config.py`, `db.py`,
+`models.py`, `mistral_client.py`, `status.py`, `llm.py`, `billing.py`) sitting
+side by side — no `app/` or `routes/` package, so there's nothing to import
+with a dotted path.
+
 1. Push this repo to GitHub (if not already).
 2. On https://render.com, **New → Web Service**, connect the repo, set:
-   - Root directory: `backend`
+   - Runtime: `Python 3`
+   - Root directory: leave **blank** if `main.py` sits at the repo's top
+     level (a dedicated backend-only repo). If it's nested inside a bigger
+     repo under a `backend/` folder instead, set this to `backend`.
    - Build command: `pip install -r requirements.txt`
-   - Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+   - Start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
    - Instance type: Free
+   - Environment variable `PYTHON_VERSION=3.12.7` (pins a well-supported version)
 3. Under **Environment**, add the variables from `.env.example`
    (`MISTRAL_API_KEY`, `MISTRAL_MODEL`, `STRIPE_SECRET_KEY`,
    `STRIPE_PRICE_ID`, `DATABASE_URL`, `FREE_QUOTA`, `CORS_ORIGINS`,
@@ -97,11 +106,11 @@ backend is a generic, dumb relay + gatekeeper.
 ## 3. Test locally before deploying
 
 ```bash
-cd backend
+cd backend   # only if this folder is nested in a bigger repo; skip otherwise
 python -m venv .venv && .venv/Scripts/activate   # Windows
 pip install -r requirements.txt
 cp .env.example .env   # fill in real values
-uvicorn app.main:app --reload
+uvicorn main:app --reload
 ```
 
 Test the webhook locally with the [Stripe CLI](https://stripe.com/docs/stripe-cli):

@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from ..config import settings
-from ..db import get_session
-from ..mistral_client import MistralError, complete
-from .status import get_or_create_device
+from config import settings
+from db import get_session
+from mistral_client import MistralError, complete
+from status import get_or_create_device
 
 router = APIRouter()
 

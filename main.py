@@ -3,10 +3,12 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from . import models  # noqa: F401 - registers the Device model on Base
-from .config import settings
-from .db import Base, engine
-from .routes import billing, llm, status
+import models  # noqa: F401 - registers the Device model on Base
+from config import settings
+from db import Base, engine
+import billing
+import llm
+import status
 
 
 @asynccontextmanager

@@ -1,6 +1,6 @@
 import httpx
 
-from .config import settings
+from config import settings
 
 _MISTRAL_URL = "https://api.mistral.ai/v1/chat/completions"
 
